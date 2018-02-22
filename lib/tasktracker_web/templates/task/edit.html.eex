@@ -1,0 +1,6 @@
+<h2>Edit Task</h2>
+
+<%= render "form.html", Map.put(assigns, :action, task_path(@conn, :update, @task)) %>
+
+<span><%= link "Back", to: page_path(@conn, :feed), class: "btn btn-primary" %></span>
+<%= link "Delete", to: user_path(@conn, :delete, @task), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>

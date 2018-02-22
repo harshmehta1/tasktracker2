@@ -1,0 +1,49 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :title, class: "control-label" %>
+    <%= text_input f, :title, class: "form-control", placeholder: "Name the task" %>
+    <%= error_tag f, :title %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, "Description", class: "control-label" %>
+    <%= textarea f, :desc, class: "form-control", placeholder: "Describe the task" %>
+    <%= error_tag f, :desc %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, "Assign Task to:", class: "control-label" %>
+    <!-- <%= text_input f, :user_id, class: "form-control", placeholder: "Enter email address of user you want to assign this task to" %> -->
+    <%= select f, :user_id, @users, class: "form-control", placeholder: "Enter email of user" %>
+    <%= error_tag f, :user_id %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :time_spent, class: "control-label" %>
+    <div class="row">
+      <div class="col">
+        <%= number_input f, :h_time_spent, class: "form-control", placeholder: "Hours" %> hours
+      </div>
+      <div class="col">
+        <%= select f, :m_time_spent, ["0": "0", "15": "15","30": "30","45": "45"], class: "form-control", placeholder: "Minutes" %> minutes
+      </div>
+    </div>
+    <%= error_tag f, :time_spent %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :complete, class: "control-label" %>
+    <%= checkbox f, :complete, class: "checkbox" %>
+    <%= error_tag f, :complete %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

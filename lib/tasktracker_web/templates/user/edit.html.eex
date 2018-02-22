@@ -1,0 +1,6 @@
+<h2>Edit User</h2>
+
+<%= render "form.html", Map.put(assigns, :action, user_path(@conn, :update, @user)) %>
+
+<span><%= link "Back", to: page_path(@conn, :index), class: "btn btn-primary" %></span>
+<%= link "Delete", to: user_path(@conn, :delete, @user), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>

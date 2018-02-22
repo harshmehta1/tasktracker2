@@ -1,0 +1,24 @@
+<div class="top"></div>
+<h4>All Tasks</h4>
+
+<%= Enum.map @tasks, fn task -> %>
+<div class="row">
+  <div class="col">
+    <%= if task.complete do %>
+      <div class="card bg-success text-light">
+    <% else %>
+      <div class="card bg-light text-dark">
+    <% end %>
+      <div class="card-body">
+          <h4 class="card-title"><%= if task.complete do Enum.join(["Completed:",task.title], " ") else task.title end %></h4>
+          <p class="card-text"><%= task.desc %></p>
+          <p>Assigned to <b><%= task.user.name %></b>. Total time spent on Task: <i><%= task.time_spent %></i> minutes.</p>
+      </div>
+    </div>
+  </div>
+</div><br>
+<% end %>
+<div class="center-this">
+  <p align="center"><i>"That's all folks!" -Porky Pig</i></p>
+  <!-- <a href="#top">Need a ride back up?</a> -->
+</div>

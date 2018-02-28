@@ -209,9 +209,10 @@ function add_timeblock(){
   $("#manual-timeblocks").append(tb);
 }
 
+
 function init(){
   if(!$('.time-block')) {
-    // console.log("NOPE")
+    console.log("NOPE")
     return;
   }
 

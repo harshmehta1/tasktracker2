@@ -26,7 +26,7 @@ defmodule Tasktracker.Accounts.User do
           main_id = user.email
           params = %{"name" => Map.get(managee_user, :name), "email" => Map.get(managee_user, :email), "manager_id" => main_id, "managee_ids" => nil}
           Accounts.update_user(managee_user, params)
-          managee_user = Accounts.get_user(m)
+          # managee_user = Accounts.get_user(m)
          end
       end
 

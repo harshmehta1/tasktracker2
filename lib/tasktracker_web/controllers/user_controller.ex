@@ -14,10 +14,12 @@ defmodule TasktrackerWeb.UserController do
     users = Tasktracker.Accounts.list_users()
             |> Enum.map(&[&1.email])
             |> Enum.concat
+    users = List.delete(users, "admin@mehtaharsh.me")
     users = ["None"] ++ users
     managee = Tasktracker.Accounts.get_managee()
+    underlings = nil
     changeset = Accounts.change_user(%User{})
-    render(conn, "new.html", users: users, managee: managee, changeset: changeset)
+    render(conn, "new.html", users: users, managee: managee, underlings: underlings, changeset: changeset)
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -25,17 +27,18 @@ defmodule TasktrackerWeb.UserController do
     users = Tasktracker.Accounts.list_users()
             |> Enum.map(&[&1.email])
             |> Enum.concat
+    users = List.delete(users, "admin@mehtaharsh.me")
     users = ["None"] ++ users
     managee = Tasktracker.Accounts.get_managee()
     current_user = conn.assigns[:current_user]
-
+    underlings = nil
     case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: user_path(conn, :show, user))
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", users: users, managee: managee, changeset: changeset)
+        render(conn, "new.html", users: users, underlings: underlings, managee: managee, changeset: changeset)
     end
   end
 
@@ -58,8 +61,13 @@ defmodule TasktrackerWeb.UserController do
     users = Tasktracker.Accounts.list_users()
             |> Enum.map(&[&1.email])
             |> Enum.concat
+    users = List.delete(users, "admin@mehtaharsh.me")
     users = ["None"] ++ users
     managee = Tasktracker.Accounts.get_managee()
+    underlings = Tasktracker.Accounts.get_all_underlings(id)
+                |> Enum.map(&[&1.email])
+                |> Enum.concat
+
     IO.inspect(current_user)
     admin = Accounts.get_user!(Integer.to_string(current_user.id))
     us_id = String.to_integer(id)
@@ -71,7 +79,7 @@ defmodule TasktrackerWeb.UserController do
         |> redirect(to: page_path(conn, :index))
       else
         changeset = Accounts.change_user(user)
-        render(conn, "edit.html", user: user, users: users, managee: managee, changeset: changeset)
+        render(conn, "edit.html", user: user, users: users, underlings: underlings, managee: managee, changeset: changeset)
       end
     else
       conn
@@ -80,19 +88,25 @@ defmodule TasktrackerWeb.UserController do
   end
 end
 
+
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user!(id)
     users = Tasktracker.Accounts.list_users()
             |> Enum.map(&[&1.email])
             |> Enum.concat
+    users = List.delete(users, "admin@mehtaharsh.me")
     users = ["None"] ++ users
+    underlings = Tasktracker.Accounts.get_all_underlings(id)
+                |> Enum.map(&[&1.email])
+                |> Enum.concat
+
     case Accounts.update_user(user, user_params) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
         |> redirect(to: user_path(conn, :show, user))
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", user: user, users: users, changeset: changeset)
+        render(conn, "edit.html", user: user, users: users, underlings: underlings, changeset: changeset)
     end
   end
 
@@ -118,11 +132,6 @@ end
       |> redirect(to: user_path(conn, :index))
     else
       Enum.map(tasks, fn task ->
-          # ts = Map.get(task, :time_spent)
-          # hh = round(ts/60)
-          # mm = ts - (hh * 60)
-          # hh = Integer.to_string(hh)
-          # mm = Integer.to_string(mm)
           attrs = %{"complete" => Map.get(task, :complete),
                     "desc" => Map.get(task, :desc),
                     "title" => Map.get(task,:title),

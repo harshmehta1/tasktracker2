@@ -24,13 +24,17 @@
 
   <li>
     <strong>Underlings:</strong>
+    <%= if @underlings != [] do %>
     <ul>
-<%= Enum.map @underlings, fn ul -> %>
-    <li><%= ul.name %>
-        [<%= ul.email %>]
-    </li>
-<% end %>
-  </ul>
+    <%= Enum.map @underlings, fn ul -> %>
+      <li><%= ul.name %>
+          (<%= ul.email %>)
+      </li>
+    <% end %>
+    </ul>
+    <% else %>
+      No underlings
+    <% end %>
   </li>
 
 </ul>

@@ -63,7 +63,7 @@ defmodule Tasktracker.Accounts do
   end
 
   def get_managee() do
-    User |> where([user], is_nil(user.manager_id)) |> Repo.all |> Enum.map(&({&1.email, &1.id})) |> Enum.into(%{})
+    User |> Repo.all |> Enum.map(&({&1.email, &1.id})) |> Enum.into(%{})
   end
 
   # def get_manager(id) do

@@ -30,7 +30,7 @@
             <%= link "My Task Feed", to: page_path(@conn, :feed), class: "btn btn-primary" %>
             <%= if @current_user.email == "admin@mehtaharsh.me" do %>
             <% else %>
-              <%= link "Edit Profile", to: user_path(@conn, :edit, @current_user), class: "btn btn-warning" %>
+              <%= link "My Profile", to: user_path(@conn, :show, @current_user), class: "btn btn-warning" %>
             <% end %>
             <br>
           </div>

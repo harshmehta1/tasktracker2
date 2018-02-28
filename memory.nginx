@@ -2,10 +2,10 @@ server {
 	listen 80;
 	listen [::]:80;
 
-	server_name tasks1.mehtaharsh.me;
+	server_name tasks2.mehtaharsh.me;
 
 	location / {
-		proxy_pass http://localhost:5120;
+		proxy_pass http://localhost:5130;
 		#try_files $uri $uri/ =404;
 	}
 }

@@ -18,6 +18,18 @@
   </div>
 
   <div class="form-group">
+    <%= label f, :manager_id, class: "control-label" %>
+    <%= select f, :manager_id, @users, class: "form-control" %>
+    <%= error_tag f, :manager_id %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, "Select people to manage", class: "control-label" %>
+    <%= multiple_select f, :managee_ids, @managee, class: "form-control" %>
+    <%= error_tag f, :managee_ids %>
+  </div>
+
+  <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>

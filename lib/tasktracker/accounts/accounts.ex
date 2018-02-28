@@ -22,6 +22,7 @@ defmodule Tasktracker.Accounts do
   end
 
 
+
   @doc """
   Gets a single user.
 
@@ -36,8 +37,9 @@ defmodule Tasktracker.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
-
+  def get_user!(id) do
+     Repo.get!(User, id) |> Repo.preload(:managee) |> Repo.preload(:manager)
+   end
 
   @doc """
   Non-bang version of the above function
@@ -53,8 +55,20 @@ defmodule Tasktracker.Accounts do
   Returns null if user does not exist
   """
   def get_user_by_email(email) do
-    Repo.get_by(User, email: email)
+    Repo.get_by(User, email: email) |> Repo.preload(:manager) |> Repo.preload(:managee)
   end
+
+  def get_all_underlings(id) do
+    User |> where([user], user.manager_id == ^id) |> Repo.all |> Repo.preload(:manager) |> Repo.preload(:managee)
+  end
+
+  def get_managee() do
+    User |> where([user], is_nil(user.manager_id)) |> Repo.all |> Enum.map(&({&1.email, &1.id})) |> Enum.into(%{})
+  end
+
+  # def get_manager(id) do
+  #   Repo.get(User, id) |> Repo.preload(:manager) |> Repo.preload(:managee)
+  # end
   @doc """
   Creates a user.
 
@@ -90,6 +104,8 @@ defmodule Tasktracker.Accounts do
     |> User.changeset(attrs)
     |> Repo.update()
   end
+
+  # def update_user_manager(user,)
 
   @doc """
   Deletes a User.

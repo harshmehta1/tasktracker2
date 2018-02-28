@@ -1,3 +1,4 @@
+<%= if @current_user do %>
 <h2>Listing Users</h2>
 
 <table class="table">
@@ -6,6 +7,7 @@
       <th>Email</th>
       <th>Name</th>
       <th>ID</th>
+      <th>Manager ID</th>
       <!-- <th></th> -->
     </tr>
   </thead>
@@ -15,6 +17,7 @@
       <td><%= user.email %></td>
       <td><%= user.name %></td>
       <td><%= user.id %></td>
+      <td><%= user.manager_id %></td>
 
       <td class="text-right">
         <%= if @current_user.email=="admin@mehtaharsh.me" do %>
@@ -29,4 +32,7 @@
 </table>
 <%= if @current_user.email=="admin@mehtaharsh.me" do %>
 <span><%= link "New User", to: user_path(@conn, :new) %></span>
+<% end %>
+<% else %>
+<h4>Not enough permissions to view this page. <a href="/">Try logging in?</a></h4>
 <% end %>

@@ -1,4 +1,5 @@
 <%= if @current_user do %>
+<%= if @users != [] do %>
 <div class="top"></div>
   <div class="row">
     <div class="col">
@@ -7,9 +8,21 @@
       Map.put(assigns, :action, task_path(@conn, :create)) %>
     </div>
   </div>
+  <% else %>
+  <p>Cannot assign tasks. You are not a manager</p>
+<% end %>
 <% end %>
 
+<div class="row">
+<div class="col">
 <h4>Your Task Feed</h4>
+</div>
+<div class="col" align="right">
+<%= if @users != [] do %>
+  <%= link "View Task Report", to: task_path(@conn, :taskreport, %{}), class: "btn btn-success" %><br>
+<% end %>
+</div>
+</div><br>
 <%= Enum.map @tasks, fn task -> %>
 <div class="row">
   <div class="col">

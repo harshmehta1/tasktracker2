@@ -1,4 +1,8 @@
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, @action, [id: "ph-form"], fn f -> %>
+<script>
+  window.time_block_path = "<%= time_block_path(@conn, :index) %>";
+  window.current_user_id = "<%= @current_user.id %>";
+</script>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -17,25 +21,69 @@
     <%= error_tag f, :desc %>
   </div>
 
+<%= if @task != nil do %>
+  <%= if @current_user.id == @task.manager_id do %>
   <div class="form-group">
     <%= label f, "Assign Task to:", class: "control-label" %>
     <!-- <%= text_input f, :user_id, class: "form-control", placeholder: "Enter email address of user you want to assign this task to" %> -->
     <%= select f, :user_id, @users, class: "form-control", placeholder: "Enter email of user" %>
     <%= error_tag f, :user_id %>
   </div>
-
+  <% else %>
+  <div class="form-group" style="display:none ">
+    <%= text_input f, :user_id, value: @current_user.email %>
+    <%= error_tag f, :user_id %>
+  </div>
+  <% end %>
+<% else %>
+  <%= if @users != [] do %>
   <div class="form-group">
-    <%= label f, :time_spent, class: "control-label" %>
+    <%= label f, "Assign Task to:", class: "control-label" %>
+    <!-- <%= text_input f, :user_id, class: "form-control", placeholder: "Enter email address of user you want to assign this task to" %> -->
+    <%= select f, :user_id, @users, class: "form-control", placeholder: "Enter email of user" %>
+    <%= error_tag f, :user_id %>
+  </div>
+  <% else %>
+  <div class="form-group" style="display:none">
+    <%= text_input f, :user_id, value: @current_user.email %>
+    <%= error_tag f, :user_id %>
+  </div>
+  <% end %>
+<% end %>
+
+<%= if @timeblocks != nil do %>
+<h6>Time Blocks:</h6>
+  <%= Enum.map @timeblocks, fn t -> %>
     <div class="row">
-      <div class="col">
-        <%= number_input f, :h_time_spent, class: "form-control", placeholder: "Hours" %> hours
-      </div>
-      <div class="col">
-        <%= select f, :m_time_spent, ["0": "0", "15": "15","30": "30","45": "45"], class: "form-control", placeholder: "Minutes" %> minutes
+      <div class="col-4">
+      Time Block:<br>
+      Start Time: <%= t.start_time %><br>
+      End Time: <%= t.end_time %><br>
+    </div>
+    <%= if @current_user.email == @task.user_id do %>
+    <div class="col">
+      <div type="button" class="time-block-edit btn btn-primary" data-task-id="<%= Map.get(t, :id) %>">Edit</div>
+      <%= link "Delete", to: time_block_path(@conn, :delete, Map.get(t, :id)), data: [confirm: "Are you sure?"], id: "del-btn", method: :delete, class: "btn btn-danger" %>
+    </div>
+    <div class="col">
+      <div id="edit-dialog" style="display:none">
+        <input type="date" id="sd<%= Map.get(t, :id)%>" name="edit_startdate"><input id="st<%= Map.get(t, :id)%>" type="time" name="edit_starttime"><br>
+        <input type="date" id="ed<%= Map.get(t, :id)%>" name="edit_enddate"><input id="et<%= Map.get(t, :id)%>" type="time" name="edit_endtime"><br>
+        <button type="button" class="time-block-edit-save btn btn-primary" data-task-id="<%= f.data.id %>" data-time-id="<%= Map.get(t, :id) %>">Save</button>
       </div>
     </div>
-    <%= error_tag f, :time_spent %>
-  </div>
+    <% end %>
+    </div><br>
+  <% end %>
+  <%= if @current_user.email == @task.user_id do %>
+    <p>Automatically Track Time<br><i>[Click on "Start Working". Keep the page on. Press button again whenever finished.]</i></p>
+    <button type="button" class="time-block-add btn btn-warning" data-task-id="<%= f.data.id %>"></button><br><br>
+    <p>OR Manually Track Time: <br><i>[Click on "Add TimeBlock" to add a timeblock. You can add as many timeblocks as you want. If you do not want to include the time block, leave it empty."]</i></p>
+    <div id="manual-timeblocks" data-task-id="<%= f.data.id %>"></div>
+    <div class="manual-input btn btn-primary">Add TimeBlock</div>
+    <br>
+    <% end %>
+<% end %>
 
   <div class="form-group">
     <%= label f, :complete, class: "control-label" %>

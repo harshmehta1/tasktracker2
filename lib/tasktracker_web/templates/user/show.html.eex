@@ -12,6 +12,27 @@
     <%= @user.name %>
   </li>
 
+  <li>
+    <strong>Manager:</strong>
+    <%= if @manager != nil do %>
+        <%= @manager.name %>
+        [<%= @manager.email %>]
+    <% else %>
+        No manager
+    <% end %>
+  </li>
+
+  <li>
+    <strong>Underlings:</strong>
+    <ul>
+<%= Enum.map @underlings, fn ul -> %>
+    <li><%= ul.name %>
+        [<%= ul.email %>]
+    </li>
+<% end %>
+  </ul>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: user_path(@conn, :edit, @user) %></span>

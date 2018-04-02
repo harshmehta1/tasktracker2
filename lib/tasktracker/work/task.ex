@@ -40,18 +40,20 @@ defmodule Tasktracker.Work.Task do
       if manageid == nil do
         manageid = user.manager_id
       end
-      IO.inspect(Map.get(task, :id))
-      timeblock_map = Work.time_block_map(Map.get(task, :id))
-      IO.inspect(timeblock_map)
-      time_spent = 0
-      ts = Enum.map timeblock_map, fn t ->
-            diff = DateTime.diff(Map.get(t, :end_time), Map.get(t, :start_time))
-              # IO.inspect(diff)
-            round(diff/60)
-                # IO.inspect(time_spent)
+      task_id = Map.get(task, :id)
+      if task_id != nil do
+        timeblock_map = Work.time_block_map(task_id)
+        IO.inspect(timeblock_map)
+        time_spent = 0
+        ts = Enum.map timeblock_map, fn t ->
+              diff = DateTime.diff(Map.get(t, :end_time), Map.get(t, :start_time))
+              round(diff/60)
             end
-      IO.inspect(ts)
-      time_spent = Enum.sum(ts)
+        IO.inspect(ts)
+        time_spent = Enum.sum(ts)
+      else
+        time_spent = 0
+      end
       attrs = %{"complete" => Map.get(attrs, "complete"), "desc" => Map.get(attrs, "desc"),
       "time_spent" => time_spent, "title" => Map.get(attrs, "title"), "user_id" => uid, "manager_id" => manageid}
     end

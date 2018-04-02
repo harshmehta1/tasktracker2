@@ -69,7 +69,7 @@
       <div id="edit-dialog" style="display:none">
         <input type="date" id="sd<%= Map.get(t, :id)%>" name="edit_startdate"><input id="st<%= Map.get(t, :id)%>" type="time" name="edit_starttime"><br>
         <input type="date" id="ed<%= Map.get(t, :id)%>" name="edit_enddate"><input id="et<%= Map.get(t, :id)%>" type="time" name="edit_endtime"><br>
-        <button type="button" class="time-block-edit-save btn btn-primary" data-task-id="<%= f.data.id %>" data-time-id="<%= Map.get(t, :id) %>">Save</button>
+        <button type="submit" class="time-block-edit-save btn btn-primary" data-task-id="<%= f.data.id %>" data-time-id="<%= Map.get(t, :id) %>">Save</button>
       </div>
     </div>
     <% end %>

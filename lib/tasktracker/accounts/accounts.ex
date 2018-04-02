@@ -66,6 +66,12 @@ defmodule Tasktracker.Accounts do
     User |> Repo.all |> Enum.map(&({&1.email, &1.id})) |> Enum.into(%{})
   end
 
+  def get_underlings_map(id) do
+    User |> where([user], user.manager_id == ^id)
+          |> Repo.all
+          |> Enum.map(&({&1.email, &1.id}))
+          |> Enum.into(%{})
+  end
   # def get_manager(id) do
   #   Repo.get(User, id) |> Repo.preload(:manager) |> Repo.preload(:managee)
   # end

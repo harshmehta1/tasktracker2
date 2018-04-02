@@ -17,23 +17,12 @@ defmodule Tasktracker.Accounts.User do
 
   @doc false
   def changeset(%User{} = user, attrs) do
-    if attrs != Map.new do
-      managees = Map.get(attrs, "managee_ids")
-
-      if managees != [] and (not is_nil(managees)) do
-        Enum.map managees, fn m ->
-          managee_user = Accounts.get_user(m)
-          main_id = user.email
-          params = %{"name" => Map.get(managee_user, :name), "email" => Map.get(managee_user, :email), "manager_id" => main_id, "managee_ids" => nil}
-          Accounts.update_user(managee_user, params)
-          # managee_user = Accounts.get_user(m)
-         end
-      end
-
+    if attrs != Map.new and user != nil do
       manage_email = Map.get(attrs, "manager_id")
+      IO.inspect(manage_email)
       if manage_email != "None" and (not is_nil(manage_email) )  do
         manage_user = Accounts.get_user_by_email(manage_email)
-        uid = manage_user.id
+        uid = Map.get(manage_user, :id)
       else
         uid = nil
       end

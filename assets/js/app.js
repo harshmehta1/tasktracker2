@@ -127,12 +127,25 @@ function save_edited_info(ev){
   let st = $("#st"+timeid).val();
   let ed = $("#ed"+timeid).val();
   let et = $("#et"+timeid).val();
+  let curDateTime = new Date();
+  let givenDate = new Date(ed+"T"+et+":00");
+  if (curDateTime < givenDate){
+    alert("cannot add future date/time");
+    return false;
+  }
+  if (ed < sd){
+    alert("end date cannot be before start date");
+    return false;
+  }
+  if (ed == sd && et < st){
+    alert("end time cannot be before start time");
+    return false;
+  }
   if (ed == "" || et == "" || sd == "" || st == ""){
     alert('Please enter all details before saving')
   } else {
     let startdatetime = sd+" "+st+":00";
     let enddatetime = ed+" "+et+":00";
-
     let text = JSON.stringify({
       time_block: {
         end_time: enddatetime,
@@ -146,7 +159,7 @@ function save_edited_info(ev){
       data: text,
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
-      success: (resp) => { alert("Successfully update time block"); location.reload(); },
+      success: (resp) => { alert("Successfully updated time block"); location.reload(); },
       error: function(e){
         console.log(e);
       },
@@ -162,6 +175,12 @@ function push_manual_timeblocks(){
     let st = $("#nst"+i).val();
     let ed = $("#ned"+i).val();
     let et = $("#net"+i).val();
+    let curDateTime = new Date();
+    let givenDate = new Date(ed+"T"+et+":00");
+    if (curDateTime < givenDate){
+      alert("cannot add future date/time");
+      return false;
+    }
     if (ed < sd){
       alert("end date cannot be before start date");
       return false;
@@ -215,7 +234,7 @@ function init(){
     console.log("NOPE")
     return;
   }
-
+  console.log(new Date().toDateString());
 
   $(".time-block-add").click(time_block_add)
   $(".time-block-edit").click(time_block_edit)

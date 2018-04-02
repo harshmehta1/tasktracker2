@@ -18,7 +18,6 @@ Design Choices for TaskTracker Pt. 2:
 15. If a user is deleted, its tasks get assigned to the manager who can reassign them. If the user does not have a manager, it goes to admin who can reassign the task.
 16. Only a manager can see the "view task report" button.
 17. User cannot reassign a task, only the manager of the task can.
-18. Users can only choose to manage users who do not have a manager.
 
 Previous Design Choices for Task Tracker pt. 1:
 1. Description is of type text, as I think there should not be a limit on the description, since tasks can be assigned to other users, the description of tasks can be detailed and often long.
